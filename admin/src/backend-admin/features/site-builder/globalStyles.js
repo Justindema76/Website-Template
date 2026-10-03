@@ -21,32 +21,7 @@ export const DEFAULT_GLOBAL_STYLES = {
   buttonHeight: 40,
 };
 
-export const SUNWINGS_GLOBAL_STYLES = {
-  primary: '#F7931E',
-  primaryDark: '#D97706',
-  text: '#14213D',
-  muted: '#5B6B82',
-  pageBackground: '#F6F8FB',
-  surface: '#FFFFFF',
-  lightSurface: '#E8F1FB',
-  border: '#E3E9F2',
-  darkSurface: '#0B2545',
-  headingFont: '"Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  bodyFont: '"Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  h1Size: 64,
-  h2Size: 42,
-  h3Size: 30,
-  h4Size: 20,
-  contentWidth: 1200,
-  sectionSpacing: 88,
-  cardRadius: 18,
-  buttonRadius: 12,
-  buttonHeight: 48,
-};
-
-export function globalStylesForSite(siteKey = 'template') {
-  return siteKey === 'template' ? SUNWINGS_GLOBAL_STYLES : DEFAULT_GLOBAL_STYLES;
-}
+export function globalStylesForSite() {\n  return DEFAULT_GLOBAL_STYLES;\n}
 
 export function normalizeGlobalStyles(value = {}, siteKey = 'template') {
   const defaults = globalStylesForSite(siteKey);
