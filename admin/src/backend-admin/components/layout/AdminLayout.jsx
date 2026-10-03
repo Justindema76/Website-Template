@@ -132,7 +132,7 @@ export default function AdminLayout() {
         <small>Social links</small>
         <div className="site-admin-social-icons">{SOCIAL_NETWORKS.map(network => {
           const value = social[network.key];
-          const image = <img src={network.icon} alt={network.label}/>;
+          const image = network.icon ? <img src={network.icon} alt={network.label}/> : <span className="social-letter">{network.label[0]}</span>;
           return value?.url && value?.enabled !== false ? <a key={network.key} href={value.url} target="_blank" rel="noreferrer" title={network.label}>{image}</a> : <span key={network.key} className="disabled" title={`${network.label} not linked`}>{image}</span>;
         })}</div>
       </div>}
