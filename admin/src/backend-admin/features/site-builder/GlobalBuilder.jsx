@@ -18,11 +18,7 @@ export default function GlobalBuilder() {
   const [socialLinks,setSocialLinks] = useState({});
   const config = useMemo(() => globalConfigFor(type, siteKey, socialLinks), [type, siteKey, socialLinks]);
   const fallback = useMemo(() => defaultGlobalData(type, siteKey), [type, siteKey]);
-  const liveUrl = siteKey === 'template'
-    ? 'https://www.template.com'
-    : siteKey === 'template'
-      ? (import.meta.env.VITE_SUNWINGS_PREVIEW_URL || 'https://templatetransport.ca')
-      : 'https://www.template.com';
+  const liveUrl = `https://${String(import.meta.env.VITE_SITE_DOMAIN || 'example.com').replace(/^https?:\/\//,'').replace(/\/$/,'')}`;
   const sectionLabel = type === 'header' ? 'Header' : type === 'footer' ? 'Footer' : 'Project Request Drawer';
   const [data,setData] = useState(null);
   const [savedAt,setSavedAt] = useState('');
