@@ -1,29 +1,7 @@
 import { readPublic, SITE_KEY } from './supabase';
 
-export const DEFAULT_STYLES = {
-  primary: '#2F6BFF',
-  primaryDark: '#5A8CFF',
-  text: '#1D2935',
-  muted: '#66788A',
-  pageBackground: '#F8F7F4',
-  surface: '#FFFFFF',
-  lightSurface: '#E8F0FF',
-  border: '#DCE4EC',
-  darkSurface: '#081522',
-  headingFont: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  bodyFont: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  h1Size: 64,
-  h2Size: 48,
-  h3Size: 36,
-  h4Size: 24,
-  contentWidth: 1180,
-  sectionSpacing: 96,
-  cardRadius: 24,
-  buttonRadius: 999,
-  buttonHeight: 48,
-};
-
 export const DEFAULT_HEADER = {
+  logo: '',
   brand: 'Business Name',
   brandFirst: 'Business',
   brandSecond: 'Name',
@@ -38,24 +16,64 @@ export const DEFAULT_HEADER = {
   nav7Label: '', nav7Url: '',
   buttonText: '', buttonUrl: '',
   socialIconColor: '#415162',
-  socialIconBackground: 'var(--site-surface,#fff)',
-  socialIconBorder: 'var(--site-border,#DCE4EC)',
+  socialIconBackground: '#ffffff',
+  socialIconBorder: '#DCE4EC',
   socialIconHoverColor: '#ffffff',
-  socialIconHoverBackground: 'var(--site-primary,#2F6BFF)',
+  socialIconHoverBackground: '#2F6BFF',
+  background: 'white',
 };
 
 export const DEFAULT_FOOTER = {
+  logo: '',
   brand: 'Business Name',
   tagline: 'Add your business tagline.',
-  copyright: 'Business Name. All rights reserved.'
+  column1Title: 'Explore',
+  link1Label: 'Home', link1Url: '/',
+  link2Label: 'About', link2Url: '/about',
+  link3Label: 'Services', link3Url: '/services',
+  link4Label: 'Blog', link4Url: '/blog',
+  column2Title: 'Connect',
+  link5Label: 'Contact', link5Url: '/contact',
+  link6Label: '', link6Url: '',
+  link7Label: '', link7Url: '',
+  link8Label: '', link8Url: '',
+  socialTitle: 'Connect',
+  socialText: 'Follow us for updates.',
+  copyright: 'Business Name. All rights reserved.',
+  privacyLabel: 'Privacy', privacyUrl: '/privacy',
+  termsLabel: 'Terms', termsUrl: '/terms',
   socialIconColor: '#ffffff',
   socialIconBackground: 'rgba(255,255,255,.04)',
   socialIconBorder: 'rgba(255,255,255,.18)',
   socialIconHoverColor: '#ffffff',
-  socialIconHoverBackground: 'var(--site-primary,#2F6BFF)',
+  socialIconHoverBackground: '#2F6BFF',
+  background: 'dark',
 };
 
-function normalizeStyles(value = {}) {
+export const DEFAULT_STYLES = {
+  primary: '#1f67b2',
+  primaryDark: '#185892',
+  text: '#202223',
+  muted: '#5c6268',
+  pageBackground: '#f7f8fa',
+  surface: '#ffffff',
+  lightSurface: '#eef5fc',
+  border: '#dfe3e8',
+  darkSurface: '#111b27',
+  headingFont: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  bodyFont: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  h1Size: 64,
+  h2Size: 48,
+  h3Size: 36,
+  h4Size: 24,
+  contentWidth: 1180,
+  sectionSpacing: 76,
+  cardRadius: 14,
+  buttonRadius: 8,
+  buttonHeight: 40,
+};
+
+export function normalizeStyles(value = {}) {
   return {
     ...DEFAULT_STYLES,
     ...(value || {}),
@@ -101,7 +119,7 @@ export async function loadSetting(key, fallback) {
   try {
     const rows = await readPublic(
       'site_settings',
-      `select=value&site_key=eq.${encodeURIComponent(SITE_KEY)}&key=eq.${encodeURIComponent(key)}&limit=1`
+      `select=value&site_key=eq.${encodeURIComponent(SITE_KEY)}&setting_key=eq.${encodeURIComponent(key)}&limit=1`
     );
     const raw = rows[0]?.value || {};
     const value = raw?.content?.[0]?.props || raw;
@@ -112,8 +130,7 @@ export async function loadSetting(key, fallback) {
 }
 
 export async function loadGlobalStyles() {
-  const value = await loadSetting('global_styles', DEFAULT_STYLES);
-  return normalizeStyles(value);
+  return normalizeStyles(await loadSetting('global_styles', DEFAULT_STYLES));
 }
 
 export async function loadPublishedPage(pageId) {
@@ -137,34 +154,4 @@ export async function loadBlogPost(slug) {
     `select=*&site_key=eq.${encodeURIComponent(SITE_KEY)}&status=eq.published&slug=eq.${encodeURIComponent(slug)}&limit=1`
   );
   return rows[0] || null;
-}
-
-export async function loadWorkPost(slug) {
-  const rows = await readPublic(
-    'work_posts',
-    `select=*&site_key=eq.${encodeURIComponent(SITE_KEY)}&status=eq.published&slug=eq.${encodeURIComponent(slug)}&limit=1`
-  );
-  return rows[0] || null;
-}
-
-export async function loadAiPost(slug) {
-  const rows = await readPublic(
-    'ai_posts',
-    `select=*&site_key=eq.${encodeURIComponent(SITE_KEY)}&status=eq.published&slug=eq.${encodeURIComponent(slug)}&limit=1`
-  );
-  return rows[0] || null;
-}
-
-export async function loadAiPosts() {
-  return readPublic(
-    'ai_posts',
-    `select=id,slug,title,work_type,company,role,platform,audience,excerpt,featured_image,featured_image_alt,project_url,tags,seo_title,seo_description,status,published_at,updated_at&site_key=eq.${encodeURIComponent(SITE_KEY)}&status=eq.published&order=published_at.desc`
-  );
-}
-
-export async function loadWorkPosts() {
-  return readPublic(
-    'work_posts',
-    `select=id,slug,title,work_type,company,role,platform,audience,excerpt,featured_image,featured_image_alt,project_url,tags,seo_title,seo_description,status,published_at,updated_at&site_key=eq.${encodeURIComponent(SITE_KEY)}&status=eq.published&order=published_at.desc`
-  );
 }
